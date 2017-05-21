@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .select{
+            width:220px;height:auto;
+            padding:5px;background:#eee;
+            border-radius: 10px;float:left;
+            margin-right: 50px;
+        }
+
+        .search{
+            width:100%;
+            height:25px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .input{
+            width:130px;height:100%;
+            border:1px solid #000;
+            border-radius: 10px;
+            display: flex;overflow: hidden;
+        }
+        input:focus{
+            outline: none;
+        }
+
+        .input .icon{
+            width:25px;height:25px;
+            transform: rotate(180deg);
+            text-align: center;
+            line-height: 25px;
+        }
+        .input input{
+            border:none;
+            width:100%;height:100%;
+            background: #eee;
+        }
+        .btn{
+            width:70px;height: 100%;
+            border:1px solid orange;
+            border-radius: 10px;
+            background:orange;
+            text-align: center;
+            line-height: 25px;
+        }
+        ul,li{
+            padding:0;margin:0;list-style: none;
+        }
+        .list{
+           padding:5px;
+        }
+        .list li{
+            padding:3px 0;
+            cursor: pointer;
+        }
+      /*
+
+         结构（html css）
+         逻辑（js）
+         数据
+
+        */
+
+    </style>
+    <script src="../vue.min.js"></script>
+
+</head>
+<body>
+  <div id="vue">
+        <custom-select :listdata="one" title="搜索"></custom-select>
+        <custom-select :listdata="two" title="查询" ></custom-select>
+  </div>
+
+     <script>
+
+         /*
+         *  1. 结构
+         *
+         *  2. 逻辑
+         *
+         *
+         *  父子组件之间数据的传递
+         *
+         *    父亲-》儿子  单向数据流  父级-》子级
+         *
+         *    子->父
+         *
+         * */
+
+         Vue.component("custom-select",{
+                props:["title","listdata"],
+                data(){
+                    return {
+                        hidden:false,
+                        val:""
+                    }
+                },
+                methods:{
+
+                    toggle(){
+                        this.hidden=!this.hidden;
+                    },
+
+                    abcd(val){
+                        this.val=val;
+                        this.hidden=!this.hidden;
+                    }
+                },
+                template:`<div class="select">
+        <div class="search">
+            <div class="input">
+                <div class="icon">  ^ </div>
+                <input type="text" @click="toggle" v-model="val">
+            </div>
+            <div class="btn">{{title}}</div>
+        </div>
+            <custom-list :hidden="hidden" :listdata="listdata" @aaaa="abcd"></custom-list>
+     </div>`
+            });
+
+
+         //列表的组件
+         Vue.component("custom-list",{
+             props:["hidden","listdata"],
+             methods:{
+                    show(val){
+                        this.$emit("aaaa",val);
+                    }
+             },
+             template:`<ul class="list" v-show="hidden">
+            <li v-for="item in listdata" @click="show(item)">{{item}}</li>
+
+        </ul>`
+         })
+
+
+
+
+            new Vue({
+                el:"#vue",
+                data:{
+                    one:["北京","上海","山西","西安"],
+                    two:["html","css","js","nodejs","php","mysql"]
+                }
+            })
+
+
+     </script>
+</body>
+</html>
